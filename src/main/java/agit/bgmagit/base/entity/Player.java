@@ -63,6 +63,11 @@ public class Player extends BaseDate {
         };
         return (double) base / 1000 + uma * seatMultiplier;
     }
+    
+    public String toFormattedString() {
+        return String.format("[%s]%s: %d", playerSeat, playerName, playerScore);
+    }
+    
     /**
      * 연관 관계 편의메서드
      * @param matchs

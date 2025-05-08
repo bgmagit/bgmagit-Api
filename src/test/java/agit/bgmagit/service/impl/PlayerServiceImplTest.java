@@ -4,6 +4,7 @@ import agit.bgmagit.MapperAndServiceTestSupport;
 import agit.bgmagit.base.entity.Wind;
 import agit.bgmagit.controller.request.PlayRequestList;
 import agit.bgmagit.controller.request.PlayerRequest;
+import agit.bgmagit.controller.response.PlayResponse;
 import agit.bgmagit.repository.MatchsRepository;
 import agit.bgmagit.service.PlayerService;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ class PlayerServiceImplTest extends MapperAndServiceTestSupport {
     @Autowired
     private MatchsRepository matchsRepository;
     
-    @DisplayName("")
+    @DisplayName("기록 저장 테스트")
     @Test
     void test(){
         
@@ -41,11 +42,20 @@ class PlayerServiceImplTest extends MapperAndServiceTestSupport {
                 ,new PlayerRequest("진하", 32500, "동")
                 , new PlayerRequest("큐브", -7100, "남")
         );
-        
         PlayRequestList requestList = new PlayRequestList(Wind.SOUTH);
         requestList.setPlayerRequests(playerRequests);
-        
         playerService.savePlayer(requestList);
+    }
+    
+    @DisplayName("기록 전체 조회 테스트")
+    @Test
+    void tes2t(){
+        
+        List<PlayResponse> allPlayers = playerService.findAllPlayers();
+        
+        for (PlayResponse allPlayer : allPlayers) {
+            System.out.println(allPlayer);
+        }
         
     }
 }
