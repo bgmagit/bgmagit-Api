@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
-@Entity
+
 @Table(name = "AGIT_SETTING")
+@Entity
 @Getter
 @NoArgsConstructor
 public class AgitSetting extends BaseDate {

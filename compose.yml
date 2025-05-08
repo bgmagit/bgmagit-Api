@@ -3,8 +3,11 @@ services:
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: 1234
+      TZ: Asia/Seoul
+      command:
+        --default-time-zone='Asia/Seoul'
     volumes:
-#      - C:/Users/ulim/Desktop/bgm/mysql_data:/var/lib/mysql
-      - C:/Users/rlglx/OneDrive/Desktop/mysqlFolder/dd/mysql_data:/var/lib/mysql
+      - C:/Users/ulim/Desktop/bgm/mysql_data:/var/lib/mysql
+#      - C:/Users/rlglx/OneDrive/Desktop/mysqlFolder/dd/mysql_data:/var/lib/mysql
     ports:
       - 3306:3306
