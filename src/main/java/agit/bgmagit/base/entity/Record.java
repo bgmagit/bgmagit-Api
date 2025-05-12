@@ -1,6 +1,7 @@
 package agit.bgmagit.base.entity;
 
 import agit.bgmagit.base.BaseDate;
+import agit.bgmagit.controller.request.RecordModifyRequest;
 import agit.bgmagit.controller.request.RecordRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,8 +41,19 @@ public class Record extends BaseDate {
         if (this.recordRank != null) {
             this.recordPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
         }
-      
     }
+    
+    public void modifyRecord(RecordModifyRequest recordModifyRequest,AgitSetting agitSettings, String name) {
+        this.recordName =  recordModifyRequest.getRecordName();
+        this.recordScore =  recordModifyRequest.getRecordScore();
+        this.recordSeat = recordModifyRequest.getRecordSeat();
+        this.recordRank = recordModifyRequest.getRecordRank();
+        int seatMultiplier = getSeatMultiplier(name);
+        if (this.recordRank != null) {
+            this.recordPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
+        }
+    }
+    
     private int getSeatMultiplier(String name) {
         return switch (name) {
             case "EAST" -> 1;

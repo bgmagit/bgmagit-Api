@@ -2,8 +2,12 @@ package agit.bgmagit.service.impl;
 
 import agit.bgmagit.MapperAndServiceTestSupport;
 import agit.bgmagit.base.entity.Wind;
+import agit.bgmagit.controller.request.RecordModifyRequest;
+import agit.bgmagit.controller.request.RecordModifyRequestList;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.request.RecordRequest;
+import agit.bgmagit.controller.response.ApiResponse;
+import agit.bgmagit.controller.response.RecordModifyResponse;
 import agit.bgmagit.controller.response.RecordModifyResponseList;
 import agit.bgmagit.controller.response.RecordResponse;
 import agit.bgmagit.repository.MatchsRepository;
@@ -14,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.stream.Collectors;
 
 
 class RecordServiceImplTest extends MapperAndServiceTestSupport {
@@ -64,4 +70,48 @@ class RecordServiceImplTest extends MapperAndServiceTestSupport {
         RecordModifyResponseList oneRecord = recordService.findOneRecord(3L);
         System.out.println(oneRecord);
     }
+    
+    @DisplayName("")
+    @Test
+    void test4(){
+        RecordModifyResponseList oneRecord = recordService.findOneRecord(3L);
+        
+        List<RecordModifyResponse> recordModifyResponses = oneRecord.getRecordModifyResponses();
+        for (RecordModifyResponse recordModifyRespons : recordModifyResponses) {
+            System.out.println(recordModifyRespons);
+            if ("김민건".equals(recordModifyRespons.getRecordName())) {
+                recordModifyRespons.setRecordScore(56100);
+            } else if ("진하".equals(recordModifyRespons.getRecordName())) {
+                recordModifyRespons.setRecordScore(38500);
+            } else if ("꽐룰".equals(recordModifyRespons.getRecordName())) {
+                recordModifyRespons.setRecordScore(32500);
+            } else if ("큐브".equals(recordModifyRespons.getRecordName())) {
+                recordModifyRespons.setRecordScore(-7100);
+            }
+        }
+        
+        List<RecordModifyRequest> requestList = recordModifyResponses.stream()
+                .map(r -> new RecordModifyRequest(
+                        r.getRecordId(),
+                        r.getRecordName(),
+                        r.getRecordScore(),
+                        r.getRecordSeat()
+                ))
+                .collect(Collectors.toList());
+        
+        RecordModifyRequestList recordModifyRequestList = new RecordModifyRequestList(
+                requestList,
+                oneRecord.getMatchsWind(),
+                oneRecord.getMatchsId()
+        );
+        ApiResponse apiResponse = recordService.modifyRecord(recordModifyRequestList);
+        System.out.println(apiResponse);
+    }
+    @DisplayName("")
+    @Test
+    void test5(){
+        ApiResponse apiResponse = recordService.removeRecord(3L);
+        System.out.println(apiResponse);
+    }
+    
 }

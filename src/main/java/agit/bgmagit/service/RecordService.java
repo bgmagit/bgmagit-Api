@@ -1,6 +1,6 @@
 package agit.bgmagit.service;
 
-import agit.bgmagit.controller.request.RecordModifyRequest;
+import agit.bgmagit.controller.request.RecordModifyRequestList;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.response.ApiResponse;
 import agit.bgmagit.controller.response.RecordModifyResponseList;
@@ -16,5 +16,7 @@ public interface RecordService {
     
     ApiResponse saveRecord(RecordRequestList recordRequestList);
     
-    ApiResponse modifyRecord(RecordModifyRequest recordModifyRequest);
+    ApiResponse modifyRecord(RecordModifyRequestList recordModifyRequest);
+    
+    ApiResponse removeRecord(Long matchId);
 }

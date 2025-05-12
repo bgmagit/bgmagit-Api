@@ -3,6 +3,7 @@ package agit.bgmagit.service.impl;
 import agit.bgmagit.base.entity.*;
 import agit.bgmagit.base.entity.Record;
 import agit.bgmagit.controller.request.RecordModifyRequest;
+import agit.bgmagit.controller.request.RecordModifyRequestList;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.request.RecordRequest;
 import agit.bgmagit.controller.response.ApiResponse;
@@ -98,14 +99,15 @@ public class RecordServiceImpl implements RecordService {
                         RecordModifyResponse.class,
                         record.recordId,
                         record.recordScore,
-                        record.recordName
+                        record.recordName,
+                        record.recordSeat
                 ))
                 .from(record)
                 .where(record.matchs.matchsId.eq(matchId))
                 .fetch();
         
         return new RecordModifyResponseList(match.getMatchsId()
-                , match.getMatchsWind().name()
+                , match.getMatchsWind()
                 , recordModifyResponses);
     }
     
@@ -138,19 +140,38 @@ public class RecordServiceImpl implements RecordService {
     }
     
     @Override
-    public ApiResponse modifyRecord(RecordModifyRequest recordModifyRequest) {
+    public ApiResponse modifyRecord(RecordModifyRequestList recordModifyRequest) {
         Long matchId = recordModifyRequest.getMatchId();
         Matchs matchs = matchsRepository.findById(matchId)
                 .orElseThrow(() -> new IllegalArgumentException("대국 정보 없음"));
         matchs.modifyMatchWind(recordModifyRequest);
         
-        List<RecordRequest> recordRequests = recordModifyRequest.getRecordRequests();
+        List<RecordModifyRequest> recordRequests = getRecordRequests(recordModifyRequest);
+        AgitSetting agitSettings = queryFactory
+                .selectFrom(agitSetting)
+                .where(agitSetting.agitSettingId.eq(
+                        JPAExpressions
+                                .select(agitSetting.agitSettingId.max())
+                                .from(agitSetting)
+                ))
+                .fetchOne();
         
-        for (RecordRequest recordRequest : recordRequests) {
-            //recordRepository.findById()
+        for (RecordModifyRequest recordRequest : recordRequests) {
+            Record record = recordRepository.findById(recordRequest.getRecordId())
+                    .orElseThrow(() -> new IllegalArgumentException("기록 정보 없음"));
+             record.modifyRecord(recordRequest, agitSettings, matchs.getMatchsWind().name());
+            
         }
         
-        return null;
+        return new ApiResponse(200,true,"수정 되었습니다.");
+    }
+    
+    @Override
+    public ApiResponse removeRecord(Long matchId) {
+        Matchs matchs = matchsRepository.findById(matchId)
+                .orElseThrow(() -> new RuntimeException("대국 정보 없음"));
+        matchsRepository.delete(matchs);
+        return new ApiResponse(200, true, "삭제 되었습니다.");
     }
     
     private List<RecordRequest> getPlayerRequests(RecordRequestList playRequestList) {
@@ -161,5 +182,14 @@ public class RecordServiceImpl implements RecordService {
         return playerRequests;
     }
     
+    private List<RecordModifyRequest> getRecordRequests(RecordModifyRequestList recordModifyRequestList) {
+        List<RecordModifyRequest> recordRequests = recordModifyRequestList.getRecordRequests();
+        recordRequests.sort(Comparator.comparing(RecordModifyRequest::getRecordScore).reversed());
+        AtomicInteger index = new AtomicInteger(1);
+        recordRequests.forEach(r -> r.setRecordRank(index.getAndIncrement()));
+        return recordRequests;
+    }
+    
+   
     
 }

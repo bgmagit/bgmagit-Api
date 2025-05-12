@@ -1,13 +1,21 @@
 package agit.bgmagit.controller.request;
 
-import agit.bgmagit.base.entity.Wind;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class RecordModifyRequest {
-    private List<RecordRequest> recordRequests;
-    private Wind matchsWind;
-    private Long matchId;
+    private Long recordId;
+    private String recordName;
+    private Integer recordScore;
+    private String recordSeat;
+    private Integer recordRank;
+    
+    public RecordModifyRequest(Long recordId, String recordName, Integer recordScore, String recordSeat) {
+        this.recordId = recordId;
+        this.recordName = recordName;
+        this.recordScore = recordScore;
+        this.recordSeat = recordSeat;
+    }
 }

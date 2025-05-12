@@ -10,10 +10,12 @@ public class RecordModifyResponse {
     private Long recordId;
     private Integer recordScore;
     private String recordName;
+    private String recordSeat;
     
-    public RecordModifyResponse(Long recordId, Integer recordScore, String recordName) {
+    public RecordModifyResponse(Long recordId, Integer recordScore, String recordName,String recordSeat) {
         this.recordId = recordId;
         this.recordScore = recordScore;
         this.recordName = recordName;
+        this.recordSeat = recordSeat;
     }
 }
