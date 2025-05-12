@@ -2,24 +2,23 @@ package agit.bgmagit.service.impl;
 
 import agit.bgmagit.MapperAndServiceTestSupport;
 import agit.bgmagit.base.entity.Wind;
-import agit.bgmagit.controller.request.PlayRequestList;
-import agit.bgmagit.controller.request.PlayerRequest;
-import agit.bgmagit.controller.response.PlayResponse;
+import agit.bgmagit.controller.request.RecordRequestList;
+import agit.bgmagit.controller.request.RecordRequest;
+import agit.bgmagit.controller.response.RecordResponse;
 import agit.bgmagit.repository.MatchsRepository;
-import agit.bgmagit.service.PlayerService;
+import agit.bgmagit.service.RecordService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 
 
-class PlayerServiceImplTest extends MapperAndServiceTestSupport {
+class RecordServiceImplTest extends MapperAndServiceTestSupport {
     
     @Autowired
-    private PlayerService playerService;
+    private RecordService recordService;
     
     @Autowired
     private MatchsRepository matchsRepository;
@@ -36,24 +35,24 @@ class PlayerServiceImplTest extends MapperAndServiceTestSupport {
 //                , new PlayerRequest("김민건", 8700, "남")
 //        );
         
-        List<PlayerRequest> playerRequests = Arrays.asList(
-                new PlayerRequest("김민건", 56100, "북")
-                , new PlayerRequest("꽐룰", 38500, "서")
-                ,new PlayerRequest("진하", 32500, "동")
-                , new PlayerRequest("큐브", -7100, "남")
+        List<RecordRequest> recordRequests = Arrays.asList(
+                new RecordRequest("김민건", 56100, "북")
+                , new RecordRequest("꽐룰", 38500, "서")
+                ,new RecordRequest("진하", 32500, "동")
+                , new RecordRequest("큐브", -7100, "남")
         );
-        PlayRequestList requestList = new PlayRequestList(Wind.SOUTH);
-        requestList.setPlayerRequests(playerRequests);
-        playerService.savePlayer(requestList);
+        RecordRequestList requestList = new RecordRequestList(Wind.SOUTH);
+        requestList.setRecordRequests(recordRequests);
+        recordService.savePlayer(requestList);
     }
     
     @DisplayName("기록 전체 조회 테스트")
     @Test
     void tes2t(){
         
-        List<PlayResponse> allPlayers = playerService.findAllPlayers();
+        List<RecordResponse> allPlayers = recordService.findAllPlayers();
         
-        for (PlayResponse allPlayer : allPlayers) {
+        for (RecordResponse allPlayer : allPlayers) {
             System.out.println(allPlayer);
         }
         

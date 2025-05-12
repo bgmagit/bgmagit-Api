@@ -1,16 +1,14 @@
 package agit.bgmagit.service.impl;
 
-import agit.bgmagit.base.entity.AgitSetting;
-import agit.bgmagit.base.entity.Matchs;
-import agit.bgmagit.base.entity.Player;
-import agit.bgmagit.base.entity.Wind;
-import agit.bgmagit.controller.request.PlayRequestList;
-import agit.bgmagit.controller.request.PlayerRequest;
+import agit.bgmagit.base.entity.*;
+import agit.bgmagit.base.entity.Record;
+import agit.bgmagit.controller.request.RecordRequestList;
+import agit.bgmagit.controller.request.RecordRequest;
 import agit.bgmagit.controller.response.ApiResponse;
-import agit.bgmagit.controller.response.PlayResponse;
+import agit.bgmagit.controller.response.RecordResponse;
 import agit.bgmagit.repository.MatchsRepository;
-import agit.bgmagit.repository.PlayerRepository;
-import agit.bgmagit.service.PlayerService;
+import agit.bgmagit.repository.RecordRepository;
+import agit.bgmagit.service.RecordService;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -26,37 +24,37 @@ import java.util.stream.Collectors;
 
 import static agit.bgmagit.base.entity.QAgitSetting.agitSetting;
 import static agit.bgmagit.base.entity.QMatchs.matchs;
-import static agit.bgmagit.base.entity.QPlayer.player;
+import static agit.bgmagit.base.entity.QRecord.*;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PlayerServiceImpl implements PlayerService {
+public class RecordServiceImpl implements RecordService {
     
-    private final PlayerRepository playerRepository;
+    private final RecordRepository playerRepository;
     
     private final MatchsRepository matchsRepository;
     
     private final JPAQueryFactory queryFactory;
     
     @Override
-    public List<PlayResponse> findAllPlayers() {
-        List<Player> players = queryFactory
-                .selectFrom(player)
-                .join(player.matchs, matchs).fetchJoin()
+    public List<RecordResponse> findAllPlayers() {
+        List<Record> players = queryFactory
+                .selectFrom(record)
+                .join(record.matchs, matchs).fetchJoin()
                 .fetch();
         
-        Map<Long, List<Player>> groupedByMatch = players.stream()
+        Map<Long, List<Record>> groupedByMatch = players.stream()
                 .collect(Collectors.groupingBy(p -> p.getMatchs().getMatchsId()));
         
         return groupedByMatch.entrySet().stream()
                 .map(entry -> {
                     Long matchId = entry.getKey();
-                    List<Player> group = entry.getValue();
+                    List<Record> group = entry.getValue();
                     
-                    group.sort(Comparator.comparing(Player::getPlayerScore).reversed());
+                    group.sort(Comparator.comparing(Record::getRecordScore).reversed());
                     
-                    PlayResponse response = new PlayResponse();
+                    RecordResponse response = new RecordResponse();
                     response.setMatchsId(matchId);
                     Wind matchsWind = group.get(0).getMatchs().getMatchsWind();
                     LocalDateTime registDate = group.get(0).getRegistDate();
@@ -80,13 +78,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
     
     @Override
-    public ApiResponse savePlayer(PlayRequestList playRequestList) {
+    public ApiResponse savePlayer(RecordRequestList playRequestList) {
         
         Wind matchsWind = playRequestList.getMatchsWind();
         
         Matchs matchs = matchsRepository.save(new Matchs(matchsWind));
         
-        List<PlayerRequest> playerRequests = getPlayerRequests(playRequestList);
+        List<RecordRequest> recordRequests = getPlayerRequests(playRequestList);
         
         AgitSetting agitSettings = queryFactory
                 .selectFrom(agitSetting)
@@ -98,8 +96,8 @@ public class PlayerServiceImpl implements PlayerService {
                 .fetchOne();
         
         
-        for (PlayerRequest playerRequest : playerRequests) {
-            Player player = new Player(playerRequest, agitSettings, matchs.getMatchsWind().name());
+        for (RecordRequest recordRequest : recordRequests) {
+            Record player = new Record(recordRequest, agitSettings, matchs.getMatchsWind().name());
             player.setMatchs(matchs);
             playerRepository.save(player);
         }
@@ -107,11 +105,11 @@ public class PlayerServiceImpl implements PlayerService {
         return new ApiResponse(200,true,"정상 저장되었습니다.");
     }
     
-    private List<PlayerRequest> getPlayerRequests(PlayRequestList playRequestList) {
-        List<PlayerRequest> playerRequests = playRequestList.getPlayerRequests();
-        playerRequests.sort(Comparator.comparing(PlayerRequest::getPlayerScore).reversed());
+    private List<RecordRequest> getPlayerRequests(RecordRequestList playRequestList) {
+        List<RecordRequest> playerRequests = playRequestList.getRecordRequests();
+        playerRequests.sort(Comparator.comparing(RecordRequest::getRecordScore).reversed());
         AtomicInteger index = new AtomicInteger(1);
-        playerRequests.forEach(p -> p.setPlayerRank(index.getAndIncrement()));
+        playerRequests.forEach(p -> p.setRecordRank(index.getAndIncrement()));
         return playerRequests;
     }
 }

@@ -8,17 +8,17 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class PlayRequestList {
+public class RecordRequestList {
     
-    private List<PlayerRequest> playerRequests;
+    private List<RecordRequest> recordRequests;
     private Wind matchsWind;
     
-    public PlayRequestList(List<PlayerRequest> playerRequests, Wind matchsWind) {
-        this.playerRequests = playerRequests;
+    public RecordRequestList(List<RecordRequest> playerRequests, Wind matchsWind) {
+        this.recordRequests = playerRequests;
         this.matchsWind = matchsWind;
     }
     
-    public PlayRequestList(Wind matchsWind) {
+    public RecordRequestList(Wind matchsWind) {
         this.matchsWind = matchsWind;
     }
 }

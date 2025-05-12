@@ -1,44 +1,44 @@
 package agit.bgmagit.base.entity;
 
 import agit.bgmagit.base.BaseDate;
-import agit.bgmagit.controller.request.PlayerRequest;
+import agit.bgmagit.controller.request.RecordRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "PLAYER")
+@Table(name = "RECORD")
 @Getter
 @NoArgsConstructor
-public class Player extends BaseDate {
+public class Record extends BaseDate {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PLAYER_ID")
-    private Long playerId;
+    @Column(name = "RECORD_ID")
+    private Long recordId;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MATCHS_ID")
     private Matchs matchs;
-    @Column(name = "PLAYER_NAME")
-    private String playerName;
-    @Column(name = "PLAYER_RANK")
-    private Integer playerRank;
-    @Column(name = "PLAYER_SCORE")
-    private Integer playerScore;
-    @Column(name = "PLAYER_SEAT")
-    private String playerSeat;
-    @Column(name = "PLAYER_POINT")
-    private Double playerPoint;
+    @Column(name = "RECORD_NAME")
+    private String recordName;
+    @Column(name = "RECORD_RANK")
+    private Integer recordRank;
+    @Column(name = "RECORD_SCORE")
+    private Integer recordScore;
+    @Column(name = "RECORD_SEAT")
+    private String recordSeat;
+    @Column(name = "RECORD_POINT")
+    private Double recordPoint;
     
-    public Player(PlayerRequest playerRequests, AgitSetting agitSettings, String name) {
-        this.playerName =  playerRequests.getPlayerName();
-        this.playerRank =  playerRequests.getPlayerRank();
-        this.playerScore =  playerRequests.getPlayerScore();
-        this.playerSeat = playerRequests.getPlayerSeat();
+    public Record(RecordRequest playerRequests, AgitSetting agitSettings, String name) {
+        this.recordName =  playerRequests.getRecordName();
+        this.recordRank =  playerRequests.getRecordRank();
+        this.recordScore =  playerRequests.getRecordScore();
+        this.recordSeat = playerRequests.getRecordSeat();
         int seatMultiplier = getSeatMultiplier(name);
-        if (this.playerRank != null) {
-            this.playerPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
+        if (this.recordRank != null) {
+            this.recordPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
         }
       
     }
@@ -53,8 +53,8 @@ public class Player extends BaseDate {
     }
     
     private double calculatePlayerPoint(AgitSetting settings, int seatMultiplier) {
-        int base = this.playerScore - settings.getAgitSettingTurning();
-        int uma = switch (this.playerRank) {
+        int base = this.recordScore - settings.getAgitSettingTurning();
+        int uma = switch (this.recordRank) {
             case 1 -> settings.getAgitSettingFirstUma();
             case 2 -> settings.getAgitSettingSecondUma();
             case 3 -> settings.getAgitSettingThirdUma();
@@ -65,7 +65,7 @@ public class Player extends BaseDate {
     }
     
     public String toFormattedString() {
-        return String.format("[%s]%s: %d", playerSeat, playerName, playerScore);
+        return String.format("[%s]%s: %d", recordSeat, recordName, recordScore);
     }
     
     /**
@@ -74,8 +74,8 @@ public class Player extends BaseDate {
      */
     public void setMatchs(Matchs matchs) {
         this.matchs = matchs;
-        if (matchs != null && !matchs.getPlayer().contains(this)) {
-            matchs.getPlayer().add(this);
+        if (matchs != null && !matchs.getRecords().contains(this)) {
+            matchs.getRecords().add(this);
         }
     }
     

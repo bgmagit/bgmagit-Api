@@ -25,7 +25,7 @@ public class Matchs extends BaseDate {
     private Wind matchsWind;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "matchs")
-    private List<Player> player = new ArrayList<>();
+    private List<Record> records = new ArrayList<>();
     
     public Matchs(Wind matchsWind) {
         this.matchsWind = matchsWind;
