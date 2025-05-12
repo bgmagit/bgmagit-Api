@@ -4,6 +4,7 @@ import agit.bgmagit.MapperAndServiceTestSupport;
 import agit.bgmagit.base.entity.Wind;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.request.RecordRequest;
+import agit.bgmagit.controller.response.RecordModifyResponseList;
 import agit.bgmagit.controller.response.RecordResponse;
 import agit.bgmagit.repository.MatchsRepository;
 import agit.bgmagit.service.RecordService;
@@ -43,7 +44,7 @@ class RecordServiceImplTest extends MapperAndServiceTestSupport {
         );
         RecordRequestList requestList = new RecordRequestList(Wind.SOUTH);
         requestList.setRecordRequests(recordRequests);
-        recordService.savePlayer(requestList);
+        recordService.saveRecord(requestList);
     }
     
     @DisplayName("기록 전체 조회 테스트")
@@ -55,6 +56,12 @@ class RecordServiceImplTest extends MapperAndServiceTestSupport {
         for (RecordResponse allPlayer : allPlayers) {
             System.out.println(allPlayer);
         }
-        
+    }
+    
+    @DisplayName("")
+    @Test
+    void test3(){
+        RecordModifyResponseList oneRecord = recordService.findOneRecord(3L);
+        System.out.println(oneRecord);
     }
 }

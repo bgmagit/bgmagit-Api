@@ -2,13 +2,17 @@ package agit.bgmagit.service.impl;
 
 import agit.bgmagit.base.entity.*;
 import agit.bgmagit.base.entity.Record;
+import agit.bgmagit.controller.request.RecordModifyRequest;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.request.RecordRequest;
 import agit.bgmagit.controller.response.ApiResponse;
+import agit.bgmagit.controller.response.RecordModifyResponse;
+import agit.bgmagit.controller.response.RecordModifyResponseList;
 import agit.bgmagit.controller.response.RecordResponse;
 import agit.bgmagit.repository.MatchsRepository;
 import agit.bgmagit.repository.RecordRepository;
 import agit.bgmagit.service.RecordService;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +35,14 @@ import static agit.bgmagit.base.entity.QRecord.*;
 @RequiredArgsConstructor
 public class RecordServiceImpl implements RecordService {
     
-    private final RecordRepository playerRepository;
+    private final RecordRepository recordRepository;
     
     private final MatchsRepository matchsRepository;
     
     private final JPAQueryFactory queryFactory;
     
     @Override
+    @Transactional(readOnly = true)
     public List<RecordResponse> findAllPlayers() {
         List<Record> players = queryFactory
                 .selectFrom(record)
@@ -78,7 +83,34 @@ public class RecordServiceImpl implements RecordService {
     }
     
     @Override
-    public ApiResponse savePlayer(RecordRequestList playRequestList) {
+    public RecordModifyResponseList findOneRecord(Long matchId) {
+        
+        Matchs match = queryFactory
+                .selectFrom(matchs)
+                .where(matchs.matchsId.eq(matchId))
+                .fetchOne();
+        if (match == null) {
+            throw new IllegalArgumentException("대국 정보 없음");
+        }
+        
+        List<RecordModifyResponse> recordModifyResponses = queryFactory
+                .select(Projections.constructor(
+                        RecordModifyResponse.class,
+                        record.recordId,
+                        record.recordScore,
+                        record.recordName
+                ))
+                .from(record)
+                .where(record.matchs.matchsId.eq(matchId))
+                .fetch();
+        
+        return new RecordModifyResponseList(match.getMatchsId()
+                , match.getMatchsWind().name()
+                , recordModifyResponses);
+    }
+    
+    @Override
+    public ApiResponse saveRecord(RecordRequestList playRequestList) {
         
         Wind matchsWind = playRequestList.getMatchsWind();
         
@@ -99,10 +131,26 @@ public class RecordServiceImpl implements RecordService {
         for (RecordRequest recordRequest : recordRequests) {
             Record player = new Record(recordRequest, agitSettings, matchs.getMatchsWind().name());
             player.setMatchs(matchs);
-            playerRepository.save(player);
+            recordRepository.save(player);
         }
         
-        return new ApiResponse(200,true,"정상 저장되었습니다.");
+        return new ApiResponse(200, true, "정상 저장되었습니다.");
+    }
+    
+    @Override
+    public ApiResponse modifyRecord(RecordModifyRequest recordModifyRequest) {
+        Long matchId = recordModifyRequest.getMatchId();
+        Matchs matchs = matchsRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("대국 정보 없음"));
+        matchs.modifyMatchWind(recordModifyRequest);
+        
+        List<RecordRequest> recordRequests = recordModifyRequest.getRecordRequests();
+        
+        for (RecordRequest recordRequest : recordRequests) {
+            //recordRepository.findById()
+        }
+        
+        return null;
     }
     
     private List<RecordRequest> getPlayerRequests(RecordRequestList playRequestList) {
@@ -112,4 +160,6 @@ public class RecordServiceImpl implements RecordService {
         playerRequests.forEach(p -> p.setRecordRank(index.getAndIncrement()));
         return playerRequests;
     }
+    
+    
 }

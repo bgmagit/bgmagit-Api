@@ -17,13 +17,15 @@ public class RecordController {
     
     private final RecordService recordService;
     
-    @GetMapping(value = "/player")
+    @GetMapping(value = "/record")
     public List<RecordResponse> getPlayer() {
         return recordService.findAllPlayers();
     }
     
-    @PostMapping(value = "/player")
+    @PostMapping(value = "/record")
     public ApiResponse addPlayer(@RequestBody RecordRequestList playRequestList) {
-        return recordService.savePlayer(playRequestList);
+        return recordService.saveRecord(playRequestList);
     }
+    
+    
 }

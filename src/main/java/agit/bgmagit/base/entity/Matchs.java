@@ -2,6 +2,7 @@ package agit.bgmagit.base.entity;
 
 
 import agit.bgmagit.base.BaseDate;
+import agit.bgmagit.controller.request.RecordModifyRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,9 @@ public class Matchs extends BaseDate {
     public Matchs(Wind matchsWind) {
         this.matchsWind = matchsWind;
     }
+    
+    public void modifyMatchWind(RecordModifyRequest recordModifyRequest) {
+        this.matchsWind = recordModifyRequest.getMatchsWind();
+    }
+    
 }
