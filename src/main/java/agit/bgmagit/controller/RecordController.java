@@ -1,6 +1,8 @@
 package agit.bgmagit.controller;
 
 
+import agit.bgmagit.controller.request.RecordModifyRequest;
+import agit.bgmagit.controller.request.RecordModifyRequestList;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.response.ApiResponse;
 import agit.bgmagit.controller.response.RecordResponse;
@@ -23,9 +25,16 @@ public class RecordController {
     }
     
     @PostMapping(value = "/record")
-    public ApiResponse addPlayer(@RequestBody RecordRequestList playRequestList) {
-        return recordService.saveRecord(playRequestList);
+    public ApiResponse addPlayer(@RequestBody RecordRequestList recordRequestList) {
+        return recordService.saveRecord(recordRequestList);
     }
     
-    
+    @PutMapping(value = "/record")
+    public ApiResponse updatePlayer(@RequestBody RecordModifyRequestList recordModifyRequestList) {
+        return recordService.modifyRecord(recordModifyRequestList);
+    }
+    @DeleteMapping(value = "/record/{matchId}")
+    public ApiResponse deleteRecord(@PathVariable Long matchId) {
+        return recordService.removeRecord(matchId);
+    }
 }

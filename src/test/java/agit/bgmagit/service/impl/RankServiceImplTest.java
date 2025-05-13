@@ -1,6 +1,7 @@
 package agit.bgmagit.service.impl;
 
 import agit.bgmagit.MapperAndServiceTestSupport;
+import agit.bgmagit.controller.response.RankRecordResponse;
 import agit.bgmagit.controller.response.RankResponse;
 import agit.bgmagit.service.RankService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -27,5 +28,14 @@ class RankServiceImplTest extends MapperAndServiceTestSupport {
         
         System.out.println(ranks);
         
+    }
+    @DisplayName("")
+    @Test
+    void test2(){
+        
+        List<RankRecordResponse> name = rankService.findRankRecords("큐브");
+        
+        System.out.println(name);
+    
     }
 }
