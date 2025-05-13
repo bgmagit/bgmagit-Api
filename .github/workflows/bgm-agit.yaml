@@ -1,0 +1,61 @@
+name: bgm-agit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  E4is:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: GitHub Repository에 올린 파일들 불러오기
+        uses: actions/checkout@v4
+
+      - name: JDK 17 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: application properties 파일 만들기
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-real.properties
+
+      - name: gradle 권한 추가
+        run: chmod +x gradlew
+
+      - name: gradle 빌드
+        run: ./gradlew clean build -x test
+
+      - name: 빌드된 파일 이름 변경
+        run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
+
+      - name: SCP로 전송
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: '22'
+          source: project.jar
+          target: /root/bgmagit_Server/tobe
+
+      - name: SSH로 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: '22'
+          envs: APPLICATION_PROPERTIES
+          script_stop: true
+          script: |
+            rm -rf /root/bgmagit_Server/target
+            mkdir /root/bgmagit_Server/target
+            mv /root/bgmagit_Server/tobe/project.jar /root/bgmagit_Server/target
+            cd /root/bgmagit_Server/target
+            sudo fuser -k -n tcp 8080 || true
+            nohup java -jar -Dspring.profiles.active=real project.jar > ./output.log 2>&1 &
+            rm -rf /root/bgmagit_Server/tobe
