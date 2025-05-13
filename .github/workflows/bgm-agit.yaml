@@ -41,7 +41,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: '22'
           source: project.jar
-          target: /root/bgmagit_Server/tobe
+          target: /home/ubuntu/bgmagit-Server/tobe
 
       - name: SSH로 접속하기
         uses: appleboy/ssh-action@v1.0.3
@@ -53,10 +53,10 @@ jobs:
           envs: APPLICATION_PROPERTIES
           script_stop: true
           script: |
-            rm -rf /root/bgmagit_Server/target
-            mkdir /root/bgmagit_Server/target
-            mv /root/bgmagit_Server/tobe/project.jar /root/bgmagit_Server/target
-            cd /root/bgmagit_Server/target
+            rm -rf /home/ubuntu/bgmagit-Server/target
+            mkdir -p /home/ubuntu/bgmagit-Server/target
+            mv /home/ubuntu/bgmagit-Server/tobe/project.jar /home/ubuntu/bgmagit-Server/target
+            cd /home/ubuntu/bgmagit-Server/target
             sudo fuser -k -n tcp 8080 || true
             nohup java -jar -Dspring.profiles.active=real project.jar > ./output.log 2>&1 &
-            rm -rf /root/bgmagit_Server/tobe
+            rm -rf /home/ubuntu/bgmagit-Server/tobe
