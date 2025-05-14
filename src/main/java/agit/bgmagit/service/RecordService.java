@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface RecordService {
     
-    List<RecordResponse> findAllPlayers();
+    List<RecordResponse> findAllRecord();
     
     RecordModifyResponseList findOneRecord(Long matchId);
     

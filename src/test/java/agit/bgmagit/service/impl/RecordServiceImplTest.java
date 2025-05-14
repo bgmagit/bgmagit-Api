@@ -52,7 +52,7 @@ class RecordServiceImplTest extends MapperAndServiceTestSupport {
     @Test
     void tes2t(){
         
-        List<RecordResponse> allPlayers = recordService.findAllPlayers();
+        List<RecordResponse> allPlayers = recordService.findAllRecord();
         
         for (RecordResponse allPlayer : allPlayers) {
             System.out.println(allPlayer);

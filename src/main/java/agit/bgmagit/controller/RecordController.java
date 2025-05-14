@@ -20,8 +20,8 @@ public class RecordController {
     private final RecordService recordService;
     
     @GetMapping(value = "/record")
-    public List<RecordResponse> getPlayer() {
-        return recordService.findAllPlayers();
+    public List<RecordResponse> getRecord() {
+        return recordService.findAllRecord();
     }
     
     @PostMapping(value = "/record")

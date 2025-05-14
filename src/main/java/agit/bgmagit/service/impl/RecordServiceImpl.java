@@ -44,7 +44,7 @@ public class RecordServiceImpl implements RecordService {
     
     @Override
     @Transactional(readOnly = true)
-    public List<RecordResponse> findAllPlayers() {
+    public List<RecordResponse> findAllRecord() {
         List<Record> players = queryFactory
                 .selectFrom(record)
                 .join(record.matchs, matchs).fetchJoin()
@@ -53,7 +53,7 @@ public class RecordServiceImpl implements RecordService {
         Map<Long, List<Record>> groupedByMatch = players.stream()
                 .collect(Collectors.groupingBy(p -> p.getMatchs().getMatchsId()));
         
-        return groupedByMatch.entrySet().stream()
+        List<RecordResponse> list = groupedByMatch.entrySet().stream()
                 .map(entry -> {
                     Long matchId = entry.getKey();
                     List<Record> group = entry.getValue();
@@ -80,7 +80,9 @@ public class RecordServiceImpl implements RecordService {
                     
                     return response;
                 })
-                .toList();
+                .collect(Collectors.toList());
+        list.sort(Comparator.comparing(RecordResponse::getMatchsId).reversed());
+        return list;
     }
     
     @Override
