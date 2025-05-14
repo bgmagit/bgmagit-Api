@@ -33,7 +33,7 @@ class PlayerControllerTest extends ControllerTestSupport {
     @Test
     void test1() throws Exception {
         
-        mockMvc.perform(get("/bgm-agit/player")
+        mockMvc.perform(get("/bgm-agit/record")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
     }
@@ -48,7 +48,7 @@ class PlayerControllerTest extends ControllerTestSupport {
         );
         RecordRequestList playRequestList = new RecordRequestList(playerRequests, Wind.SOUTH);
         String jsonRequest = objectMapper.writeValueAsString(playRequestList);
-        mockMvc.perform(post("/bgm-agit/player")
+        mockMvc.perform(post("/bgm-agit/record")
                         .content(jsonRequest)
                         .contentType(APPLICATION_JSON))
                 .andDo(print())

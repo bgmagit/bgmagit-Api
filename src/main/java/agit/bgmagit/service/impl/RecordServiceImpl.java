@@ -176,20 +176,40 @@ public class RecordServiceImpl implements RecordService {
     
     private List<RecordRequest> getPlayerRequests(RecordRequestList playRequestList) {
         List<RecordRequest> playerRequests = playRequestList.getRecordRequests();
-        playerRequests.sort(Comparator.comparing(RecordRequest::getRecordScore).reversed());
-        AtomicInteger index = new AtomicInteger(1);
-        playerRequests.forEach(p -> p.setRecordRank(index.getAndIncrement()));
+        
+        Map<String, Integer> seatPriority = getStringIntegerMap();
+        
+        playerRequests.sort(
+                Comparator.comparing(RecordRequest::getRecordScore).reversed()
+                        .thenComparing(r -> seatPriority.getOrDefault(r.getRecordSeat(), Integer.MAX_VALUE))
+        );
+        
+        AtomicInteger rank = new AtomicInteger(1);
+        playerRequests.forEach(p -> p.setRecordRank(rank.getAndIncrement()));
+        
         return playerRequests;
     }
     
     private List<RecordModifyRequest> getRecordRequests(RecordModifyRequestList recordModifyRequestList) {
         List<RecordModifyRequest> recordRequests = recordModifyRequestList.getRecordRequests();
-        recordRequests.sort(Comparator.comparing(RecordModifyRequest::getRecordScore).reversed());
+        Map<String, Integer> seatPriority = getStringIntegerMap();
+        recordRequests.sort(
+                Comparator.comparing(RecordModifyRequest::getRecordScore).reversed()
+                        .thenComparing(r -> seatPriority.getOrDefault(r.getRecordSeat(), Integer.MAX_VALUE))
+        );
         AtomicInteger index = new AtomicInteger(1);
         recordRequests.forEach(r -> r.setRecordRank(index.getAndIncrement()));
         return recordRequests;
     }
     
-   
+    private static Map<String, Integer> getStringIntegerMap() {
+        return Map.of(
+                "동", 0,
+                "남", 1,
+                "서", 2,
+                "북", 3
+        );
+    }
+    
     
 }
