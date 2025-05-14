@@ -143,7 +143,7 @@ public class RankServiceImpl implements RankService {
             responses.add(new RankRecordResponse(
                     matchsId,
                     recordId,
-                    players.get(0).get(record.matchs.matchsWind).name(),
+                    Objects.requireNonNull(players.get(0).get(record.matchs.matchsWind)).toKorean(),
                     first,
                     second,
                     third,
