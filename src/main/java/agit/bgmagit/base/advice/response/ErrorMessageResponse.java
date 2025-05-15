@@ -22,16 +22,21 @@ import java.util.Map;
  * ]
  * }
  */
-@RequiredArgsConstructor
+
 @Setter
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorMessageResponse {
-    private final String code;
+    private  String code;
     
-    private final String message;
+    private  String message;
     
     private List<Map<String, String>> validation;
+    
+    public ErrorMessageResponse(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
     
     public void addValidation(String fieldName, String errorMessage) {
         if (this.validation == null) {

@@ -21,10 +21,11 @@ public class ExceptionController {
      *
      * 검증 예외 처리
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorMessageResponse exceptionHandler(MethodArgumentNotValidException e) {
         log.error("검증 예외 에러 메시지 = {}", e.getMessage());
+        log.error("검증 예외 에러", e);
         BindingResult bindingResult = e.getBindingResult();
         List<ObjectError> allErrors = bindingResult.getAllErrors();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -35,7 +36,7 @@ public class ExceptionController {
                 if (error instanceof FieldError fieldError) {
                     errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
                 }else {
-                    errorResponse.addValidation(error.getObjectName(), error.getDefaultMessage());
+                    errorResponse.setMessage(error.getDefaultMessage());
                 }
             }
         }
