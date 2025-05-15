@@ -162,9 +162,10 @@ class RecordServiceImplTest extends MapperAndServiceTestSupport {
                     String raw = row.getCell(i).getStringCellValue(); // ex: [동]홍길동: 32000
                     String[] parts = raw.split(":");
                 
-                    String name = parts[0].replaceAll("\\[.*?\\]", "").trim();     // "[동]레이노즈" → "레이노즈"
+                    String name = parts[0].replaceAll("\\[.*?\\]", "").trim();
+                    String seat = parts[0].replaceAll("^\\[([^\\]]+)\\].*$", "$1");// "[동]레이노즈" → "레이노즈"
                     
-                    String seat = getSeat(i); // 2=동, 3=남, 4=서, 5=북
+                    
                     Integer score = Integer.parseInt(parts[1].trim());
                     
                     records.add(new RecordRequest(name, score, seat,dateTime));
@@ -177,17 +178,6 @@ class RecordServiceImplTest extends MapperAndServiceTestSupport {
             }
         }
     }
-    
-    private String getSeat(int index) {
-        return switch (index) {
-            case 2 -> "동";
-            case 3 -> "남";
-            case 4 -> "서";
-            case 5 -> "북";
-            default -> throw new IllegalArgumentException("잘못된 순위 index: " + index);
-        };
-    }
-    
     private String convertWind(String windKor) {
         return switch (windKor.trim()) {
             case "동장" -> "EAST";
