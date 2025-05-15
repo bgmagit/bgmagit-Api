@@ -11,6 +11,8 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Value("${cors.url}")
     private String corsUrl;
+    @Value("${cors.url2}")
+    private String corsUrl2;
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
