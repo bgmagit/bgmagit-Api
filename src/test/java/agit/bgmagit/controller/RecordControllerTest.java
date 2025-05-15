@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class PlayerControllerTest extends ControllerTestSupport {
+class RecordControllerTest extends ControllerTestSupport {
     
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
@@ -40,14 +40,14 @@ class PlayerControllerTest extends ControllerTestSupport {
     @DisplayName("기록 저장 컨트롤러 테스트")
     @Test
     void test2() throws Exception {
-        List<RecordRequest> playerRequests = Arrays.asList(
+        List<RecordRequest> recordRequests = Arrays.asList(
                 new RecordRequest("쵸리", 55300, "동")
                 , new RecordRequest("큐브", 26700, "남")
                 ,new RecordRequest("민준", 4200, "서")
                 , new RecordRequest("남군", 33800, "북")
         );
-        RecordRequestList playRequestList = new RecordRequestList(playerRequests, Wind.SOUTH);
-        String jsonRequest = objectMapper.writeValueAsString(playRequestList);
+        RecordRequestList recordRequestList = new RecordRequestList(recordRequests, Wind.SOUTH);
+        String jsonRequest = objectMapper.writeValueAsString(recordRequestList);
         mockMvc.perform(post("/bgm-agit/record")
                         .content(jsonRequest)
                         .contentType(APPLICATION_JSON))
