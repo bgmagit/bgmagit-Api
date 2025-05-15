@@ -1,13 +1,14 @@
 package agit.bgmagit.controller;
 
 
-import agit.bgmagit.controller.request.RecordModifyRequest;
 import agit.bgmagit.controller.request.RecordModifyRequestList;
 import agit.bgmagit.controller.request.RecordRequestList;
 import agit.bgmagit.controller.response.ApiResponse;
+import agit.bgmagit.controller.response.RecordModifyResponseList;
 import agit.bgmagit.controller.response.RecordResponse;
 import agit.bgmagit.service.RecordService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +25,13 @@ public class RecordController {
         return recordService.findAllRecord();
     }
     
+    @GetMapping(value = "/record/{matchId}")
+    public RecordModifyResponseList getOneRecord(@PathVariable Long matchId) {
+        return recordService.findOneRecord(matchId);
+    }
+    
     @PostMapping(value = "/record")
-    public ApiResponse addPlayer(@RequestBody RecordRequestList recordRequestList) {
+    public ApiResponse addRecord(@Validated @RequestBody RecordRequestList recordRequestList) {
         return recordService.saveRecord(recordRequestList);
     }
     
