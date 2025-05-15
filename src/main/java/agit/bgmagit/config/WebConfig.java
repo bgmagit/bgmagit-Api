@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(corsUrl)
                 .allowCredentials(true)
                 .allowedHeaders("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
+                .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS");
     }
     
     @Override
