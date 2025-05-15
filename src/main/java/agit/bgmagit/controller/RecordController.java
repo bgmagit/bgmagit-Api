@@ -36,7 +36,7 @@ public class RecordController {
     }
     
     @PutMapping(value = "/record")
-    public ApiResponse updatePlayer(@RequestBody RecordModifyRequestList recordModifyRequestList) {
+    public ApiResponse updatePlayer(@Validated @RequestBody RecordModifyRequestList recordModifyRequestList) {
         return recordService.modifyRecord(recordModifyRequestList);
     }
     @DeleteMapping(value = "/record/{matchId}")
