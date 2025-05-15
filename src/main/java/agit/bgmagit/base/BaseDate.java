@@ -18,10 +18,10 @@ public abstract class BaseDate {
     
     @CreatedDate
     @Column(name = "REGIST_DATE")
-    private LocalDateTime registDate;
+    protected LocalDateTime registDate;
     
     
     @LastModifiedDate
     @Column(name = "MODIFY_DATE")
-    private LocalDateTime modifyDate;
+    protected LocalDateTime modifyDate;
 }

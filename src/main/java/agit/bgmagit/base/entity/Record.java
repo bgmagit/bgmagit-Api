@@ -41,7 +41,11 @@ public class Record extends BaseDate {
         if (this.recordRank != null) {
             this.recordPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
         }
+        if(playerRequests.getRecordDateTime() != null) {
+            this.registDate = playerRequests.getRecordDateTime();
+        }
     }
+    
     
     public void modifyRecord(RecordModifyRequest recordModifyRequest,AgitSetting agitSettings, String name) {
         this.recordName =  recordModifyRequest.getRecordName();
