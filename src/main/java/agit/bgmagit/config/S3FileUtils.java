@@ -5,14 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -33,21 +32,34 @@ public class S3FileUtils {
         return uploadFiles;
     }
     
-    public RuleFile storeFile(MultipartFile multipartFile)  {
+    public RuleFile storeFile(MultipartFile multipartFile) {
         
         if (multipartFile.isEmpty()) {
             return null;
         }
+        
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = createStoreFileName(originalFilename);
-        // S3에 파일 업로드
+        
         try {
+            Map<String, String> metadata = new HashMap<>();
+            metadata.put("Content-Type", "application/pdf");
+            metadata.put("Content-Disposition", "inline");
+            
             s3Client.putObject(PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(storeFileName)
-                    .build(), software.amazon.awssdk.core.sync.RequestBody.fromBytes(multipartFile.getBytes()));
-            String fileUrl = s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(storeFileName)).toExternalForm();
+                            .bucket(bucketName)
+                            .key(storeFileName)
+                            .metadata(metadata)
+                            .build(),
+                    RequestBody.fromBytes(multipartFile.getBytes())
+            );
+            
+            String fileUrl = s3Client.utilities()
+                    .getUrl(b -> b.bucket(bucketName).key(storeFileName))
+                    .toExternalForm();
+            
             return new RuleFile(originalFilename, fileUrl);
+            
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
