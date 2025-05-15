@@ -37,11 +37,13 @@ class RecordControllerTest extends ControllerTestSupport {
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(print());
     }
+    
+    
     @DisplayName("기록 저장 컨트롤러 테스트")
     @Test
     void test2() throws Exception {
         List<RecordRequest> recordRequests = Arrays.asList(
-                new RecordRequest("쵸리", 55300, "동")
+                new RecordRequest("쵸리", 553000, "동")
                 , new RecordRequest("큐브", 26700, "남")
                 ,new RecordRequest("민준", 4200, "서")
                 , new RecordRequest("남군", 33800, "북")

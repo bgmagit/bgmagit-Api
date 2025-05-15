@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,9 +26,19 @@ public class ExceptionController {
     public ErrorMessageResponse exceptionHandler(MethodArgumentNotValidException e) {
         log.error("검증 예외 에러 메시지 = {}", e.getMessage());
         BindingResult bindingResult = e.getBindingResult();
+        List<ObjectError> allErrors = bindingResult.getAllErrors();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         ErrorMessageResponse errorResponse = new ErrorMessageResponse(String.valueOf(HttpStatus.BAD_REQUEST.value()), "잘못된 요청입니다.");
         fieldErrors.forEach(err -> errorResponse.addValidation(err.getField(), err.getDefaultMessage()));
+        if (fieldErrors.isEmpty()) {
+            for (ObjectError error : allErrors) {
+                if (error instanceof FieldError fieldError) {
+                    errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
+                }else {
+                    errorResponse.addValidation(error.getObjectName(), error.getDefaultMessage());
+                }
+            }
+        }
         return errorResponse;
     }
     
