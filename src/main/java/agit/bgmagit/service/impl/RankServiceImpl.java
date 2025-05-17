@@ -109,6 +109,7 @@ public class RankServiceImpl implements RankService {
                         record.recordRank,
                         record.recordScore,
                         record.recordSeat,
+                        record.recordPoint,
                         record.registDate
                         )
                 .from(record)
@@ -161,7 +162,7 @@ public class RankServiceImpl implements RankService {
         return players.stream()
                 .filter(t -> t.get(record.recordRank) == rank)
                 .findFirst()
-                .map(t -> "[" + t.get(record.recordSeat) + "]" + t.get(record.recordName) + ": " + t.get(record.recordScore))
+                .map(t -> "[" + t.get(record.recordSeat) + "]" + t.get(record.recordName) + ": " + t.get(record.recordScore) + " (승점:"  + t.get(record.recordPoint) + ")")
                 .orElse("-");
     }
 }
