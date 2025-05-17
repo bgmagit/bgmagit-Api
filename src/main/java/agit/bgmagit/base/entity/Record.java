@@ -77,7 +77,8 @@ public class Record extends BaseDate {
             case 4 -> settings.getAgitSettingFourthUma();
             default -> 0;
         };
-        return (double) base / 1000 + uma * seatMultiplier;
+        double rawPoint = (double) base / 1000 + uma * seatMultiplier;
+        return Math.round(rawPoint * 10) / 10.0;
     }
     
     public String toFormattedString() {

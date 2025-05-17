@@ -154,7 +154,7 @@ public class RankServiceImpl implements RankService {
         }
         
         return responses.stream()
-                .sorted(Comparator.comparing(RankRecordResponse::getMatchsId))
+                .sorted(Comparator.comparing(RankRecordResponse::getMatchsId).reversed())
                 .collect(Collectors.toList());
         
     }
