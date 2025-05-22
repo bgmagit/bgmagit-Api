@@ -81,7 +81,7 @@ public class RecordServiceImpl implements RecordService {
                     return response;
                 })
                 .collect(Collectors.toList());
-        list.sort(Comparator.comparing(RecordResponse::getMatchsId).reversed());
+        list.sort(Comparator.comparing(RecordResponse::getRegistDate).reversed());
         return list;
     }
     
