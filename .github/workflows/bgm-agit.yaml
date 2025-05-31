@@ -58,5 +58,5 @@ jobs:
             mv /home/ubuntu/bgmagit-Server/tobe/project.jar /home/ubuntu/bgmagit-Server/target
             cd /home/ubuntu/bgmagit-Server/target
             sudo fuser -k -n tcp 8080 || true
-            nohup java -jar -Dspring.profiles.active=real project.jar > /dev/null 2>&1 < /dev/null &
+            nohup java -Duser.timezone=Asia/Seoul -jar -Dspring.profiles.active=real project.jar > /dev/null 2>&1 < /dev/null &
             rm -rf /home/ubuntu/bgmagit-Server/tobe
