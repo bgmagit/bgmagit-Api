@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "RECORD")
 @Getter
@@ -37,13 +39,12 @@ public class Record extends BaseDate {
         this.recordRank =  playerRequests.getRecordRank();
         this.recordScore =  playerRequests.getRecordScore();
         this.recordSeat = playerRequests.getRecordSeat();
+        this.registDate = LocalDateTime.now();
         int seatMultiplier = getSeatMultiplier(name);
         if (this.recordRank != null) {
             this.recordPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
         }
-        if(playerRequests.getRecordDateTime() != null) {
-            //this.registDate = playerRequests.getRecordDateTime();
-        }
+        
     }
     
     
