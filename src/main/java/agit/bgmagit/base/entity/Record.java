@@ -42,7 +42,7 @@ public class Record extends BaseDate {
             this.recordPoint = calculatePlayerPoint(agitSettings, seatMultiplier);
         }
         if(playerRequests.getRecordDateTime() != null) {
-            this.registDate = playerRequests.getRecordDateTime();
+            //this.registDate = playerRequests.getRecordDateTime();
         }
     }
     
