@@ -83,7 +83,8 @@ public class Record extends BaseDate {
     }
     
     public String toFormattedString() {
-        return String.format("[%s]%s: %d", recordSeat, recordName, recordScore);
+        String point = "(승점:" + this.recordPoint + ")";
+        return String.format("[%s]%s: %d %s", recordSeat, recordName, recordScore,point);
     }
     
     /**

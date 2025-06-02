@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(corsUrl,"https://bgmagit.co.kr",corsUrl2)
                 .allowedHeaders("*")
+                .allowCredentials(true)
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
     
